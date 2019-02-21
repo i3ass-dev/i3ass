@@ -5,3 +5,33 @@
 	path = next
 	url = git@github.com:budlabs/i3ass.git
 
+[submodule "ass/i3flip"]
+	path = ass/i3flip
+	url = git@github.com:i3ass-dev/i3flip.git
+[submodule "ass/i3fyra"]
+	path = ass/i3fyra
+	url = git@github.com:i3ass-dev/i3fyra.git
+[submodule "ass/i3get"]
+	path = ass/i3get
+	url = git@github.com:i3ass-dev/i3get.git
+[submodule "ass/i3gw"]
+	path = ass/i3gw
+	url = git@github.com:i3ass-dev/i3gw.git
+[submodule "ass/i3Kornhe"]
+	path = ass/i3Kornhe
+	url = git@github.com:i3ass-dev/i3Kornhe.git
+[submodule "ass/i3list"]
+	path = ass/i3list
+	url = git@github.com:i3ass-dev/i3list.git
+[submodule "ass/i3menu"]
+	path = ass/i3menu
+	url = git@github.com:i3ass-dev/i3menu.git
+[submodule "ass/i3run"]
+	path = ass/i3run
+	url = git@github.com:i3ass-dev/i3run.git
+[submodule "ass/i3var"]
+	path = ass/i3var
+	url = git@github.com:i3ass-dev/i3var.git
+[submodule "ass/i3viswiz"]
+	path = ass/i3viswiz
+	url = git@github.com:i3ass-dev/i3viswiz.git
