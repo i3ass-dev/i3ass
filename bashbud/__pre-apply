@@ -7,7 +7,6 @@
 
 projectdir="$1"
 
-
 # copy all ass man pages
 # rename them to the name, add index
 i=10
@@ -19,11 +18,23 @@ for f in "$projectdir/ass"/*/manpage.md; do
     "$projectdir/wiki/doc/$((i++))AS_${thisass}.md"
 done
 
-# copy all program.sh to src dir
+# clone next branch if dir doesn't exist
+[[ -d "${projectdir}/next" ]] || (
+  cd "$projectdir"
+  git clone git@github.com:budlabs/i3ass.git \
+            --branch next \
+            --single-branch next
+)
+
+# copy scripts and man pages to next
+mkdir -p "$projectdir/next/src"
+mkdir -p "$projectdir/next/man"
+
 for f in "$projectdir/ass"/*/program.sh; do
   thisass="${f%/*}"
   thisass="${thisass##*/}"
-  cp -f "$f" "$projectdir/src/$thisass"
+  cp -f "$f" "$projectdir/next/src/$thisass"
+  cp -f "${f%/*}/${thisass}.1" "$projectdir/next/man"
 done
 
 # update dependency list

@@ -79,53 +79,31 @@ about the command.
 `i3ass` show version info for all scripts and dependencies.
 ## updates
 
-### 2019.02.19.3
+### v.0.1.7
 
-Refactored the code for [i3get] to have a standalone `awk`
-file and also added better handling of regular expressions
-when they are passed as search strings to [i3get]. (*this
-might break some scripts that used esacped quotes and
-backslashes in the search strings*). You can now write a
-search like this: `i3get --instance '^sublime$` the "old"
-way of doing it would look something like this: `i3get -i
-"sublime\"\$"` and was more unreliable.  
+Added [i3Kornhe]
 
-[i3list] had one more of those small issues not reporting
-the correct screenheight in some cases, but it is now fixed.
+changed output of [i3viswiz] again, control variables are
+now all on the first line. Also added workspace dimensions
+for better (not yet perfect) multimonitor support, modified
+i3fyra 'move' command to work with the new changes.
 
-All man pages had a typo that said "Linx manual" instead of
-"Linux manual" that is fixed now.
+Added workspace position to i3list output.
+
+### v.0.1.77
 
 
-### 2019.02.07.06
+cleaned up [i3flip] code and added ability to flip in
+layouts other then tabbed|stacked.
+
+### v.0.1.75
 
 
-Added [i3menu] which is an improved version of the script
-`oneliner` that has been available in the **budlabs
-organization** for some time. I figured i include it with
-**i3ass** instead, since it is very *i3 focused*, see the
-wiki for more info.  
-
-Refactored [i3list] to make it easier to manage and fixed a
-small issue that resulted in splits being reported with the
-wrong size if the *main container* of the split was hidden.
-The issue had never caused any serious issues, but now that
-it is fixed I experience faster creation of the [i3fyra]
-layout, it also made some functions in the new script
-[i3menu] work as expected.
-
-### 2019.01.30.2
-
-
-Fixed two bugs (#46,#47) in [i3fyra] and [i3list]. `--hide`
-in [i3fyra] now works again. The issue in [i3list] was
-affecting targeted windows and their floating state, 
-resulting in unpredictable behavior when  fi summoning a
-window from the scratchpad.  All should be good now thanks
-to user **APotOfSoup** who reported and found the solution
-to both these issues. (the cause was the major refactoring
-and adaptation of the codebase to the `bashsbud` framework,
-introduced in the last release).
+fixed an issue with [i3viswiz] and i3gaps, where the
+correct window couldn't be located if the search  ended up
+in the gaps. (this can still happen, and might need some
+more tweaks, but with this fix it's much less likely to
+happen then before.)
 
 
 ## known issues

@@ -6,3 +6,7 @@
 projectdir=$1
 rm -f "$projectdir"/___{version,envs,help,getopt}
 
+cp -f "$projectdir"/program.sh "$projectdir"/next/src/i3ass
+cp -f "$projectdir"/i3ass.1 "$projectdir"/next/man
+cp -f "$projectdir"/README.md "$projectdir"/next
+
