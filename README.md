@@ -80,7 +80,7 @@ about the command.
 `i3ass` show version info for all scripts and dependencies.
 ## updates
 
-### next
+### 2019.03.07.1
 
 grand reorganization of i3ass. created a new GitHub
 organization: i3ass-dev. Where all the i3ass scripts have
@@ -95,6 +95,10 @@ APotOfSoup: i3get reported wrong info when criteria was
 (the latter issue is only partially fixed, moving in
 containers that are not tabbed or stacked with i3flip is
 temporarily disabled)
+
+more [i3get] fixes: there where some issues related to
+special characters in title of a window, and a bug that made
+all class searching and fetching not work. both fixed now.
 
 ### v.0.1.7
 
