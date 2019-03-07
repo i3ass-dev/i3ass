@@ -9,7 +9,7 @@ SYNOPSIS
 
 ```text
 i3flip DIRECTION
-i3flip --move|-m DIRECTION
+i3flip --move|-m **DIRECTION**
 i3flip --help|-h
 i3flip --version|-v
 ```
@@ -35,7 +35,7 @@ OPTIONS
 -------
 
 
-`--move`|`-m` DIRECTION  
+`--move`|`-m`  
 Move the current tab instead of changing focus.
 
 `--help`|`-h`  

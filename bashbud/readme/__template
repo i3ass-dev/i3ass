@@ -14,21 +14,23 @@ wrap:     60
 
 %%readme_install%%
 %%fi%%
-%%if synopsis%%
-
-### usage
-
-```text
-%%synopsis%%
-```
 %%if long_description%%
+
+USAGE
+-----
 
 %%long_description%%
 
 %%fi%%
+%%if synopsis%%
 
 OPTIONS
 -------
+
+```text
+%%synopsis%%
+```
+
 %%for o in options%%
 
 %%printf '`--%s`' 'o'%%
@@ -37,6 +39,10 @@ OPTIONS
 %%fi%%
 %%if o[arg]%%
 %%printf ' %s' 'o[arg]'%%
+%%else%%
+%%if o[optarg]%%
+%%printf ' [%s]' 'o[optarg]'%%
+%%fi%%
 %%fi%%
 %%printf '  \n'%%
 %%if o[description]%%
@@ -54,6 +60,7 @@ OPTIONS
 
 EXAMPLES
 --------
+
 %%examples%%
 %%fi%%
 %%if -d releasenotes%%
@@ -68,7 +75,6 @@ EXAMPLES
 %%readme_issues%%
 %%fi%%
 %%if readme_footer%%
-
 %%readme_footer%%
 %%fi%%
 
