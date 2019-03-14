@@ -1,10 +1,36 @@
-### 2019.03.07.1
+### 2019.03.14.4
 
-grand reorganization of i3ass. created a new GitHub organization: i3ass-dev.
-Where all the i3ass scripts have it's own repo. It's on these repos development will be done from now on. This (budlabs/i3ass), will be the repo where all issues should be reported host the wiki and the installable version of i3ass. I think this will be great.
+[i3get]  
+- fix: issue in resulting in wrong conid being returned.  
 
-This repo also contains two fixes to issues reported by APotOfSoup:
-i3get reported wrong info when criteria was **con_id**. and [i3flip] was not moving containers at all (the latter issue is only partially fixed, moving in containers that are not tabbed or stacked with i3flip is temporarily disabled)
+[i3menu]  
+- fix: removed extra row in vertical menus. 
+- fix: less twitchy moving of menu when invoked with mouse and off screen. 
+- add: negative position argument for xpos and ypos
 
-more [i3get] fixes: there where some issues related to special characters in title of a window, and a bug that made all class searching and fetching not work. both fixed now.
+**example**  
+```
+echo list | i3menu --xpos -10 --ypos -20 --width 200 --orientation vertical
+this will result in a menu displayed at a position calculated from
+the right and bottom edges of the screen.
+x=(screenwidth-(menuwidth+xpos))
+y=(screenheight-(menuheight+ypos))
+
+if you really want the menu to appear at a "real" negative coordinate (to the left of the left screen edge or above the top), use: --xoffset or --yoffset:
+
+echo list | i3menu \
+    --xpos -0 \
+    --ypos 0 \
+    --width 200 \
+    --orientation vertical \
+    --yoffset -20 \
+    --xoffset 30
+
+ this would place the "top right corner" of the menu, 20 pixels above the active screen and 30 pixels to the right of the active screen.
+
+```
+
+
+
+
 
