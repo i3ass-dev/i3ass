@@ -8,7 +8,7 @@ The links in the table below, will take you to the wiki page for the script.
 |:---------|:--------------------------|
 |[i3flip] | Tabswitching done right
 |[i3fyra] | An advanced, simple grid-based tiling layout
-|[i3get] | Boilerplate and template maker for bash scripts
+|[i3get] | prints info about a specific window to stdout
 |[i3gw] | a ghost window wrapper for i3wm
 |[i3Kornhe] | move and resize windows gracefully
 |[i3list] | list information about the current i3 session.

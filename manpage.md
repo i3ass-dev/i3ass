@@ -8,8 +8,7 @@ SYNOPSIS
 --------
 
 ```text
-i3flip DIRECTION
-i3flip --move|-m **DIRECTION**
+i3flip [--move|-m] [--json JSON] [--verbose] [--dryrun] DIRECTION
 i3flip --help|-h
 i3flip --version|-v
 ```
@@ -36,7 +35,18 @@ OPTIONS
 
 
 `--move`|`-m`  
-Move the current tab instead of changing focus.
+Move the current container instead of changing
+focus.
+
+`--json` JSON  
+use JSON instead of output from  `i3-msg -t
+get_tree`
+
+`--verbose`  
+Print more information to **stderr**.
+
+`--dryrun`  
+Don't execute any *i3 commands*.
 
 `--help`|`-h`  
 Show help and exit.
@@ -69,11 +79,11 @@ SYNOPSIS
 --------
 
 ```text
-i3fyra --show|-s CONTAINER
-i3fyra --float|-a [--target|-t CRITERION]
-i3fyra --hide|-z CONTAINER
-i3fyra --layout|-l LAYOUT
-i3fyra --move|-m DIRECTION|CONTAINER [--speed|-p INT]  [--target|-t CRITERION]
+i3fyra --show|-s CONTAINER [--force|-f] [--array ARRAY] [--verbose] [--dryrun]
+i3fyra --float|-a [--array ARRAY] [--verbose] [--dryrun]
+i3fyra --hide|-z CONTAINER [--force|-f] [--array ARRAY] [--verbose] [--dryrun]
+i3fyra --layout|-l LAYOUT [--force|-f] [--array ARRAY] [--verbose] [--dryrun]
+i3fyra --move|-m DIRECTION|CONTAINER [--force|-f] [--speed|-p INT] [--array ARRAY] [--verbose] [--dryrun]
 i3fyra --help|-h
 i3fyra --version|-v
 ```
@@ -139,6 +149,14 @@ Show target container. If it doesn't exist, it
 will be created and current window will be put in
 it. If it is visible, nothing happens.
 
+`--force`|`-f`  
+
+`--array` ARRAY  
+
+`--verbose`  
+
+`--dryrun`  
+
 `--float`|`-a`  
 Autolayout. If current window is tiled: floating
 enabled If window is floating, it will be put in a
@@ -147,16 +165,6 @@ containers. The window will be placed in a hidden
 container. If no containers exist, container
 'A'will be created and the window will be put
 there.
-
-`--target`|`-t` CRITERION  
-Criteria is a string passed to i3list to use a
-different target then active window.  
-
-Example:  
-`$ i3fyra --move B --target "-i sublime_text"`
-this will target the first found window with the
-instance name *sublime_text*. See i3list(1), for
-all available options.
 
 `--hide`|`-z` CONTAINER  
 Hide target containers if visible.  
@@ -263,7 +271,7 @@ to A. defaults to: A
 `I3FYRA_WS`  
 Workspace to use for i3fyra. If not set, the firs
 workspace that request to create the layout will
-be used. defaults to: 1
+be used. defaults to:
 
 `I3FYRA_ORIENTATION`  
 If set to `vertical` main split will be `AC` and
@@ -277,14 +285,14 @@ DEPENDENCIES
 `bash` `gawk` `i3` `i3list` `i3gw` `i3var`
 `i3viswiz`
 
-# `i3get` - Boilerplate and template maker for bash scripts
+# `i3get` - prints info about a specific window to stdout
 
 
 SYNOPSIS
 --------
 
 ```text
-i3get [--class|-c CLASS] [--instance|-i INSTANCE] [--title|-t TITLE] [--conid|-n CON_ID] [--winid|-d WIN_ID] [--mark|-m MARK] [--titleformat|-o TITLE_FORMAT] [--active|-a] [--synk|-y] [--print|-r OUTPUT]      
+i3get [--class|-c CLASS] [--instance|-i INSTANCE] [--title|-t TITLE] [--conid|-n CON_ID] [--winid|-d WIN_ID] [--mark|-m MARK] [--titleformat|-o TITLE_FORMAT] [--active|-a] [--synk|-y] [--print|-r OUTPUT] [--json TREE]      
 i3get --help|-h
 i3get --version|-v
 ```
@@ -331,26 +339,33 @@ Currently active window (default)
 `--synk`|`-y`  
 Synch on. If this option is included,  script
 will wait till target window exist. (*or timeout
-after 10 seconds*).
+after 60 seconds*).
 
 `--print`|`-r` OUTPUT  
 *OUTPUT* can be one or more of the following 
 characters:  
 
-|character | print
-|:---------|:-----
-|`t`       | title  
-|`c`       | class  
-|`i`       | instance  
-|`d`       | Window ID  
-|`n`       | Con_Id (default)  
-|`m`       | mark  
-|`w`       | workspace  
-|`a`       | is active  
-|`f`       | floating state  
-|`o`       | title format  
-|`v`       | visible state  
 
+
+|character | print            | return
+|:---------|:-----------------|:------
+|`t`         | title            | string
+|`c`         | class            | string
+|`i`         | instance         | string
+|`d`         | Window ID        | INT
+|`n`         | Con_Id (default) | INT
+|`m`         | mark             | JSON list
+|`w`         | workspace        | INT
+|`a`         | is active        | true or false
+|`f`         | floating state   | string
+|`o`         | title format     | string
+|`e`         | fullscreen       | 1 or 0
+|`s`         | sticky           | true or false
+|`u`         | urgent           | true or false
+
+`--json` TREE  
+Use TREE instead of the output of  
+`i3-msg -t get_tree`
 
 `--help`|`-h`  
 Show help and exit.
@@ -625,13 +640,13 @@ would change the title to:
 CORNER is which corner of the window that will
 get moved. The CORNER is set with a direction:  
 
+
 | direction | corner
 |:----------|:------
 | Left      | topleft
 | Down      | bottomleft
 | Up        | topright
 | Right     | bottomright
-
 
 
 This might look strange at first, but if you look
@@ -671,13 +686,13 @@ One important note is that if the active window
 is tiled, `i3Kornhe` will move it normally or
 resize it according to this table:  
 
+
 | direction | resize
 |:----------|:-------------
 | Left      | shrink width
 | Down      | shrink height
 | Up        | grow height
 | Right     | grow width
-
 
 
 
@@ -693,12 +708,13 @@ SYNOPSIS
 --------
 
 ```text
-i3list --instance|-i TARGET
-i3list --class|-c    TARGET
-i3list --conid|-n    TARGET
-i3list --winid|-d    TARGET
-i3list --mark|-m     TARGET
-i3list --title|-t    TARGET
+i3list [--json FILE]
+i3list --instance|-i TARGET [--json FILE]
+i3list --class|-c    TARGET [--json FILE]
+i3list --conid|-n    TARGET [--json FILE]
+i3list --winid|-d    TARGET [--json FILE]
+i3list --mark|-m     TARGET [--json FILE]
+i3list --title|-t    TARGET [--json FILE]
 i3list --help|-h
 i3list --version|-v
 ```
@@ -723,6 +739,8 @@ declared first.
 OPTIONS
 -------
 
+
+`--json` FILE  
 
 `--instance`|`-i` TARGET  
 Search for windows with a instance matching
@@ -907,6 +925,8 @@ single line (*dmenu like*) menu at the top of the
 screen. If however a value to this option is one
 of the following:  
 
+
+
 | LAYOUT     | menu location and dimensions 
 |:-----------|:---------------
 | mouse      | At the mouse position (requires `xdotool`)
@@ -914,8 +934,6 @@ of the following:
 | titlebar   | The titlebar of the currently active window.
 | tab        | The tab (or titlebar if it isn't tabbed) of the currently active window.
 | A,B,C or D | The **i3fyra** container of the same name if it is visible. If target container isn't visible the menu will be displayed at the default location.
-
-
 
 titlebar and tab LAYOUT will be displayed as a
 single line (*dmenu like*) menu, and the other
@@ -938,13 +956,13 @@ INCLUDESTRING can be set to force which elements
 of the menu to include. INCLUDESTRING can be one
 or more of the following character:  
 
+
+
 | char | element  |
 |:-----|:---------|
 |**p** | prompt   |
 |**e** | entrybox |
 |**l** | list     |
-
-
 
 `echo "list" | i3menu --include le --prompt
 "enter a value: "`  
@@ -1158,6 +1176,8 @@ a given criteria.  `i3run` will take different
 action depending on the state of the searched
 window:  
 
+
+
 | **target window state**          | **action**
 |:---------------------------------|:------------
 | Active and not handled by i3fyra | hide
@@ -1166,8 +1186,6 @@ window:
 | Not handled by i3fyra and hidden | show window, activate
 | Not on current workspace         | goto workspace or show if `-s` is set
 | Not found                        | execute command (`-e`)
-
-
 
 
 Hidden in this context,  means that window is on
@@ -1320,13 +1338,13 @@ SYNOPSIS
 --------
 
 ```text
-i3viswiz [--gap|-g GAPSIZE] **DIRECTION**
-i3viswiz [--focus|-f] --title|-t       [TARGET]
-i3viswiz [--focus|-f] --instance|-i    [TARGET]
-i3viswiz [--focus|-f] --class|-c       [TARGET]
-i3viswiz [--focus|-f] --titleformat|-o [TARGET]
-i3viswiz [--focus|-f] --winid|-d       [TARGET]
-i3viswiz [--focus|-f] --parent|-p      [TARGET]
+i3viswiz [--gap|-g GAPSIZE] DIRECTION  [--json JSON]
+i3viswiz [--focus|-f] --title|-t       [TARGET] [--json JSON]
+i3viswiz [--focus|-f] --instance|-i    [TARGET] [--json JSON]
+i3viswiz [--focus|-f] --class|-c       [TARGET] [--json JSON]
+i3viswiz [--focus|-f] --titleformat|-o [TARGET] [--json JSON]
+i3viswiz [--focus|-f] --winid|-d       [TARGET] [--json JSON]
+i3viswiz [--focus|-f] --parent|-p      [TARGET] [--json JSON]
 i3viswiz --help|-h
 i3viswiz --version|-v
 ```
@@ -1349,10 +1367,12 @@ OPTIONS
 -------
 
 
-`--gap`|`-g` GAPSIZE  
+`--gap`|`-g` DIRECTION  
 Set GAPSIZE (defaults to 5). GAPSIZE is the
 distance in pixels from the current window where
 new focus will be searched.  
+
+`--json` JSON  
 
 `--focus`|`-f`  
 When used in conjunction with: `--titleformat`,

@@ -1,5 +1,5 @@
 .nh
-.TH I3ASS 1 2020\-01\-26 Linux "User Manuals"
+.TH I3ASS 1 2020\-08\-08 Linux "User Manuals"
 .SH NAME
 .PP
 \fB\fCi3ass\fR \- i3 assistance scripts
@@ -14,8 +14,7 @@ arbe
 .RS
 
 .nf
-i3flip DIRECTION
-i3flip \-\-move|\-m **DIRECTION**
+i3flip [\-\-move|\-m] [\-\-json JSON] [\-\-verbose] [\-\-dryrun] DIRECTION
 i3flip \-\-help|\-h
 i3flip \-\-version|\-v
 
@@ -43,7 +42,24 @@ which can be defined with different words:
 .PP
 \fB\fC\-\-move\fR|\fB\fC\-m\fR
 .br
-Move the current tab instead of changing focus.
+Move the current container instead of changing
+focus.
+
+.PP
+\fB\fC\-\-json\fR JSON
+.br
+use JSON instead of output from  \fB\fCi3\-msg \-t
+get\_tree\fR
+
+.PP
+\fB\fC\-\-verbose\fR
+.br
+Print more information to \fBstderr\fP\&.
+
+.PP
+\fB\fC\-\-dryrun\fR
+.br
+Don't execute any \fIi3 commands\fP\&.
 
 .PP
 \fB\fC\-\-help\fR|\fB\fC\-h\fR
@@ -81,11 +97,11 @@ bindsym Mod4+Shift+Tab   exec \-\&\-\&no\-\&startup\-\&id i3flip prev
 .RS
 
 .nf
-i3fyra \-\-show|\-s CONTAINER
-i3fyra \-\-float|\-a [\-\-target|\-t CRITERION]
-i3fyra \-\-hide|\-z CONTAINER
-i3fyra \-\-layout|\-l LAYOUT
-i3fyra \-\-move|\-m DIRECTION|CONTAINER [\-\-speed|\-p INT]  [\-\-target|\-t CRITERION]
+i3fyra \-\-show|\-s CONTAINER [\-\-force|\-f] [\-\-array ARRAY] [\-\-verbose] [\-\-dryrun]
+i3fyra \-\-float|\-a [\-\-array ARRAY] [\-\-verbose] [\-\-dryrun]
+i3fyra \-\-hide|\-z CONTAINER [\-\-force|\-f] [\-\-array ARRAY] [\-\-verbose] [\-\-dryrun]
+i3fyra \-\-layout|\-l LAYOUT [\-\-force|\-f] [\-\-array ARRAY] [\-\-verbose] [\-\-dryrun]
+i3fyra \-\-move|\-m DIRECTION|CONTAINER [\-\-force|\-f] [\-\-speed|\-p INT] [\-\-array ARRAY] [\-\-verbose] [\-\-dryrun]
 i3fyra \-\-help|\-h
 i3fyra \-\-version|\-v
 
@@ -163,6 +179,18 @@ will be created and current window will be put in
 it. If it is visible, nothing happens.
 
 .PP
+\fB\fC\-\-force\fR|\fB\fC\-f\fR
+
+.PP
+\fB\fC\-\-array\fR ARRAY
+
+.PP
+\fB\fC\-\-verbose\fR
+
+.PP
+\fB\fC\-\-dryrun\fR
+
+.PP
 \fB\fC\-\-float\fR|\fB\fC\-a\fR
 .br
 Autolayout. If current window is tiled: floating
@@ -172,20 +200,6 @@ containers. The window will be placed in a hidden
 container. If no containers exist, container
 'A'will be created and the window will be put
 there.
-
-.PP
-\fB\fC\-\-target\fR|\fB\fC\-t\fR CRITERION
-.br
-Criteria is a string passed to i3list to use a
-different target then active window.
-
-.PP
-Example:
-.br
-\fB\fC$ i3fyra \-\-move B \-\-target "\-i sublime\_text"\fR
-this will target the first found window with the
-instance name \fIsublime\_text\fP\&. See i3list(1), for
-all available options.
 
 .PP
 \fB\fC\-\-hide\fR|\fB\fC\-z\fR CONTAINER
@@ -315,7 +329,7 @@ to A. defaults to: A
 .br
 Workspace to use for i3fyra. If not set, the firs
 workspace that request to create the layout will
-be used. defaults to: 1
+be used. defaults to:
 
 .PP
 \fB\fCI3FYRA\_ORIENTATION\fR
@@ -331,13 +345,13 @@ split will be \fB\fCAB\fR and families will be \fB\fCAC\fR and
 \fB\fCi3viswiz\fR
 
 
-.SH \fB\fCi3get\fR \- Boilerplate and template maker for bash scripts
+.SH \fB\fCi3get\fR \- prints info about a specific window to stdout
 .SH SYNOPSIS
 .PP
 .RS
 
 .nf
-i3get [\-\-class|\-c CLASS] [\-\-instance|\-i INSTANCE] [\-\-title|\-t TITLE] [\-\-conid|\-n CON\_ID] [\-\-winid|\-d WIN\_ID] [\-\-mark|\-m MARK] [\-\-titleformat|\-o TITLE\_FORMAT] [\-\-active|\-a] [\-\-synk|\-y] [\-\-print|\-r OUTPUT]      
+i3get [\-\-class|\-c CLASS] [\-\-instance|\-i INSTANCE] [\-\-title|\-t TITLE] [\-\-conid|\-n CON\_ID] [\-\-winid|\-d WIN\_ID] [\-\-mark|\-m MARK] [\-\-titleformat|\-o TITLE\_FORMAT] [\-\-active|\-a] [\-\-synk|\-y] [\-\-print|\-r OUTPUT] [\-\-json TREE]      
 i3get \-\-help|\-h
 i3get \-\-version|\-v
 
@@ -398,7 +412,7 @@ Currently active window (default)
 .br
 Synch on. If this option is included,  script
 will wait till target window exist. (\fIor timeout
-after 10 seconds\fP).
+after 60 seconds\fP).
 
 .PP
 \fB\fC\-\-print\fR|\fB\fC\-r\fR OUTPUT
@@ -408,21 +422,30 @@ characters:
 
 .TS
 allbox;
-l l 
-l l .
-\fB\fCcharacter\fR	\fB\fCprint\fR
-\fB\fCt\fR	title
-\fB\fCc\fR	class
-\fB\fCi\fR	instance
-\fB\fCd\fR	Window ID
-\fB\fCn\fR	Con\_Id (default)
-\fB\fCm\fR	mark
-\fB\fCw\fR	workspace
-\fB\fCa\fR	is active
-\fB\fCf\fR	floating state
-\fB\fCo\fR	title format
-\fB\fCv\fR	visible state
+l l l 
+l l l .
+\fB\fCcharacter\fR	\fB\fCprint\fR	\fB\fCreturn\fR
+\fB\fCt\fR	title	string
+\fB\fCc\fR	class	string
+\fB\fCi\fR	instance	string
+\fB\fCd\fR	Window ID	INT
+\fB\fCn\fR	Con\_Id (default)	INT
+\fB\fCm\fR	mark	JSON list
+\fB\fCw\fR	workspace	INT
+\fB\fCa\fR	is active	true or false
+\fB\fCf\fR	floating state	string
+\fB\fCo\fR	title format	string
+\fB\fCe\fR	fullscreen	1 or 0
+\fB\fCs\fR	sticky	true or false
+\fB\fCu\fR	urgent	true or false
 .TE
+
+.PP
+\fB\fC\-\-json\fR TREE
+.br
+Use TREE instead of the output of
+.br
+\fB\fCi3\-msg \-t get\_tree\fR
 
 .PP
 \fB\fC\-\-help\fR|\fB\fC\-h\fR
@@ -809,12 +832,13 @@ Right	grow width
 .RS
 
 .nf
-i3list \-\-instance|\-i TARGET
-i3list \-\-class|\-c    TARGET
-i3list \-\-conid|\-n    TARGET
-i3list \-\-winid|\-d    TARGET
-i3list \-\-mark|\-m     TARGET
-i3list \-\-title|\-t    TARGET
+i3list [\-\-json FILE]
+i3list \-\-instance|\-i TARGET [\-\-json FILE]
+i3list \-\-class|\-c    TARGET [\-\-json FILE]
+i3list \-\-conid|\-n    TARGET [\-\-json FILE]
+i3list \-\-winid|\-d    TARGET [\-\-json FILE]
+i3list \-\-mark|\-m     TARGET [\-\-json FILE]
+i3list \-\-title|\-t    TARGET [\-\-json FILE]
 i3list \-\-help|\-h
 i3list \-\-version|\-v
 
@@ -837,6 +861,9 @@ array in bash scripts,  but the array needs to be
 declared first.
 
 .SH OPTIONS
+.PP
+\fB\fC\-\-json\fR FILE
+
 .PP
 \fB\fC\-\-instance\fR|\fB\fC\-i\fR TARGET
 .br
@@ -1582,13 +1609,13 @@ Show version and exit.
 .RS
 
 .nf
-i3viswiz [\-\-gap|\-g GAPSIZE] **DIRECTION**
-i3viswiz [\-\-focus|\-f] \-\-title|\-t       [TARGET]
-i3viswiz [\-\-focus|\-f] \-\-instance|\-i    [TARGET]
-i3viswiz [\-\-focus|\-f] \-\-class|\-c       [TARGET]
-i3viswiz [\-\-focus|\-f] \-\-titleformat|\-o [TARGET]
-i3viswiz [\-\-focus|\-f] \-\-winid|\-d       [TARGET]
-i3viswiz [\-\-focus|\-f] \-\-parent|\-p      [TARGET]
+i3viswiz [\-\-gap|\-g GAPSIZE] DIRECTION  [\-\-json JSON]
+i3viswiz [\-\-focus|\-f] \-\-title|\-t       [TARGET] [\-\-json JSON]
+i3viswiz [\-\-focus|\-f] \-\-instance|\-i    [TARGET] [\-\-json JSON]
+i3viswiz [\-\-focus|\-f] \-\-class|\-c       [TARGET] [\-\-json JSON]
+i3viswiz [\-\-focus|\-f] \-\-titleformat|\-o [TARGET] [\-\-json JSON]
+i3viswiz [\-\-focus|\-f] \-\-winid|\-d       [TARGET] [\-\-json JSON]
+i3viswiz [\-\-focus|\-f] \-\-parent|\-p      [TARGET] [\-\-json JSON]
 i3viswiz \-\-help|\-h
 i3viswiz \-\-version|\-v
 
@@ -1609,11 +1636,14 @@ there are no windows in the given direction.
 
 .SH OPTIONS
 .PP
-\fB\fC\-\-gap\fR|\fB\fC\-g\fR GAPSIZE
+\fB\fC\-\-gap\fR|\fB\fC\-g\fR DIRECTION
 .br
 Set GAPSIZE (defaults to 5). GAPSIZE is the
 distance in pixels from the current window where
 new focus will be searched.
+
+.PP
+\fB\fC\-\-json\fR JSON
 
 .PP
 \fB\fC\-\-focus\fR|\fB\fC\-f\fR
