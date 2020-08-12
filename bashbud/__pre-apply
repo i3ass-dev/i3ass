@@ -5,6 +5,34 @@
 # increment version numbers
 # set updated to today in manifest.md
 
+smallassupdate() {
+
+  local latest=$1 current=$2
+  local latestdir=${latest%/*}
+  local ourbbdir="$projectdir/bashbud/__pre-apply.d/"
+  local theirbbdir="$latestdir/bashbud/__pre-apply.d/"
+
+  local datescript="$ourbbdir/date-update"
+  local versionscript="$ourbbdir/version-increment"
+
+  diff "$latest" "$current" > /dev/null || {
+    >&2 echo "update ${current##*/}"
+
+    mkdir -p "$theirbbdir"
+    cp -f "$datescript" "$versionscript" -t "$theirbbdir"
+    bashbud --bump "$latestdir"
+    newversion=$(bashbud --get version "$latestdir")
+    rm "$theirbbdir"/date-update "$theirbbdir"/version-increment
+    git -C "$latestdir" add .
+    git -C "$latestdir" commit -m 'updated version'
+    git -C "$latestdir" tag "$newversion"
+    git -C "$latestdir" push origin --tags
+
+    cp -f "$latest" "$current"
+    cp -f "${latest%/*}/${current##*/}.1" "$projectdir/next/man"
+  }
+}
+
 projectdir="$1"
 
 # copy all ass man pages
@@ -33,8 +61,8 @@ mkdir -p "$projectdir/next/man"
 for f in "$projectdir/ass"/*/program.sh; do
   thisass="${f%/*}"
   thisass="${thisass##*/}"
-  cp -f "$f" "$projectdir/next/src/$thisass"
-  cp -f "${f%/*}/${thisass}.1" "$projectdir/next/man"
+
+  smallassupdate "$f" "$projectdir/next/src/$thisass"
 done
 
 # update dependency list

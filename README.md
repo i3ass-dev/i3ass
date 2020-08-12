@@ -79,21 +79,26 @@ about the command.
 `i3get --version` display [i3get] version  
 `man i3get` show [i3get] man page  
 `i3ass` show version info for all scripts and dependencies.
+
 ## updates
 
-### 2018.08.08
+### 2020.08.11
 
-Updated all scripts, went through and cleaned up a lot of
-the code. Efficiency and stability on many of the scripts
-are largely improved. Most added features are to ease
-development, fi. `--dryrun` and `--verbose` options.
-
-#### The biggest change has been done to i3fyra
+#### [i3flip]
 
 
-which now keeps track of the *virtual position* of a
-window. What this means is that if you have the following
-window rule defined in your **i3 config file**:  
+We now use the output of **i3viswiz** instead of a custom
+AWK script. This made everything more reliable and `--move`
+function now works as expected in all types of layouts,
+(*not just tabbed and stacked as before*). Also added
+`--json`, `--verbose` and `--dryrun` options.
+
+#### [i3fyra]
+
+
+Now keeps track of the *virtual position* of a window. What
+this means is that if you have the following window rule
+defined in your **i3 config file**:  
 
 ```
 for_window [instance=irssi class=URxvt] focus;exec --no-startup-id i3fyra --move A
@@ -163,24 +168,87 @@ is new) to ignore the virtual positions. But this is
 probably nothing that anyone needs to worry about, and is
 more or less only used internally in **i3fyra**, **i3menu**
 and **i3run**. This transformation to virtual positions of
-the containers also works with the `--layout` option in
-**i3fyra**.
+the containers also works with the `--layout` option.
 
-#### i3get
+A lot of performance and stability improvements has been
+done in this update, and toggling layouts and containers now
+works much better and predictable.  
+
+**Removed**  `--target` option. I found myself never using
+and it just created awkward cornercase issues.  
+
+**Added** `--force`, `--array`, `--verbose` and `--dryrun`
+options.
+
+#### [i3get]
+
+Now uses *one* (well, sometimes two ;) single regular
+expression test in bash instead of parsing the json with
+awk, this made the script twice as fast and also, imo,
+easier to maintain and extend. I also added two new
+`--print` options, `s` for sticky status, and `e` for
+fullscreen status. But the most important change is done to
+the `--synk` functionality, which now uses `i3-msg -t
+subscribe` instead of a `while true; do sleep 10 ...`, and
+it makes everything much more responsive while at the same
+time being so much more efficient and nice on system
+recourses. Some output is different for example "marks" will
+now print the whole *JSON list* (`["mark1","mark2"...]`),
+previous behavior was to only show the first mark unqouted.
+If no value is found for a requested output (`--print`) a
+line looking like:  
+`--i3get could not find: m`  
+will be printed, previous behavior was to skip the line i
+think this new behavior is better especially if one relies
+on the order of the output lines.
+
+#### [i3Kornhe]
 
 
-i3get has also underwent a complete makeover, and i now use
-*one* (well, sometimes two ;) single regular expression test
-in bash instead of parsing the json with awk, this made the
-script twice as fast and also, imo, easier to maintain and
-extend. I also added two new `--print` options, `s` for
-sticky status, and `e` for fullscreen status. But the most
-important change is done to the `--synk` functionality,
-which now uses `i3-msg -t subscribe` instead of a `while
-true; do sleep 10 ...`, and it makes everything much more
-responsive while at the same time being so much more
-efficient and nice on system recourses.
+fixed typo related issue that caused windows not being
+moved correctly. All types of containers are now resized and
+moved in pixel (px) unit. When **i3fyra** is executed from
+this script, the `--array` option is used.
 
+#### [i3list]
+
+
+No big changes to the script. Added `--json` options and
+watch script to help testing and development. As well as a
+few new keys to the output array:  
+
+``` shell
+i3list["XAB"] # family AB workspace
+i3list["XAC"] # family AC workspace
+i3list["XCD"] # family CD workspace
+i3list["XBD"] # family BD workspace
+
+i3list["VPA"] # virtual position A
+i3list["VPB"] # virtual position B
+i3list["VPC"] # virtual position C
+i3list["VPD"] # virtual position D
+```
+
+
+#### [i3menu]
+
+
+Added support for i3fyras virtual positions.
+
+#### [i3run]
+
+
+Only change since last version is to use `i3fyra --force
+--array ARRAY` to override the new virtual positions which
+are not needed with i3run because it already figures out the
+correct container.
+
+#### [i3viswiz]
+
+
+Support for `--json` option. A lot more information is
+printed to the first line, to make things easier for
+**i3fyra** and **i3flip**.
 
 ### 2020.01.26.5
 
@@ -194,15 +262,6 @@ efficient and nice on system recourses.
 [i3run]
 - added `--force` and `--FORCE` options. When enabled `command` will get executed even if the window exist.
 
-
-
-### 2019.03.14.5
-
-
-[i3menu]  
-- fix: improved autopositioning (negative xoffset works), less delay when invoked by mouse. 
-
-- removed: test notifications.
 
 
 

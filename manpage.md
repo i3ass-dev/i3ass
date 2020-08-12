@@ -21,7 +21,7 @@ DESCRIPTION
 parent. Perfect for tabbed or stacked layout, but
 works on all layouts. If direction is `next` and
 the active container is the last, the first
-container will be activated.  
+container will get focused.  
 
 **DIRECTION** can be either *prev* or *next*,
 which can be defined with different words:  
@@ -70,7 +70,7 @@ bindsym Mod4+Shift+Tab   exec --no-startup-id i3flip prev
 DEPENDENCIES
 ------------
 
-`i3` `gawk`
+`i3` `i3viswiz`
 
 # `i3fyra` - An advanced, simple grid-based tiling layout
 
@@ -150,12 +150,21 @@ will be created and current window will be put in
 it. If it is visible, nothing happens.
 
 `--force`|`-f`  
+If set virtual positions will be ignored.
 
 `--array` ARRAY  
+ARRAY should be the output of `i3list`. It is
+used to improve speed when **i3fyra** is executed
+from a script that already have the array, f.i.
+**i3run** and **i3Kornhe**.  
 
 `--verbose`  
+If set information about execution will be
+printed to **stderr**.
 
 `--dryrun`  
+If set no window manipulation will be done during
+execution.
 
 `--float`|`-a`  
 Autolayout. If current window is tiled: floating
@@ -292,7 +301,7 @@ SYNOPSIS
 --------
 
 ```text
-i3get [--class|-c CLASS] [--instance|-i INSTANCE] [--title|-t TITLE] [--conid|-n CON_ID] [--winid|-d WIN_ID] [--mark|-m MARK] [--titleformat|-o TITLE_FORMAT] [--active|-a] [--synk|-y] [--print|-r OUTPUT] [--json TREE]      
+i3get [--class|-c CLASS] [--instance|-i INSTANCE] [--title|-t TITLE] [--conid|-n CON_ID] [--id|-d WIN_ID] [--mark|-m MARK] [--titleformat|-o TITLE_FORMAT] [--active|-a] [--synk|-y] [--print|-r OUTPUT] [--json TREE]      
 i3get --help|-h
 i3get --version|-v
 ```
@@ -303,7 +312,7 @@ DESCRIPTION
 
 Search for `CRITERIA` in the output of `i3-msg -t
 get_tree`, return desired information. If no
-arguments are passed. `con_id` of acitve window is
+arguments are passed, `con_id` of active window is
 returned. If there is more then one criterion, all
 of them must be true to get results.
 
@@ -324,7 +333,7 @@ Search for windows with title.
 `--conid`|`-n` CON_ID  
 Search for windows with the given con_id
 
-`--winid`|`-d` WIN_ID  
+`--id`|`-d` WIN_ID  
 Search for windows with the given window id
 
 `--mark`|`-m` MARK  
@@ -363,6 +372,25 @@ characters:
 |`s`         | sticky           | true or false
 |`u`         | urgent           | true or false
 
+Each character in OUTPUT will be tested and the
+return value will be printed on a new line. If no
+value is found, `--i3get could not find:
+CHARACTER` will get printed.
+
+In the example below, the target window did not
+have a mark:  
+
+```
+$ i3get -r tfcmw
+/dev/pts/9
+user_off
+URxvt
+--i3get could not find: m
+1
+```
+
+
+
 `--json` TREE  
 Use TREE instead of the output of  
 `i3-msg -t get_tree`
@@ -382,7 +410,7 @@ sublime_text.  Request workspace, title and
 floating state.  
 
 ``` shell
-$ i3get --instance sublime_text -r wtf 
+$ i3get --instance sublime_text --print wtf 
 1
 ~/src/bash/i3ass/i3get (i3ass) - Sublime Text
 user_off
@@ -392,7 +420,7 @@ user_off
 DEPENDENCIES
 ------------
 
-`bash` `gawk` `i3`
+`bash` `i3`
 
 # `i3gw` - a ghost window wrapper for i3wm
 
@@ -504,197 +532,6 @@ Show help and exit.
 `--version`|`-v`  
 Show version and exit.
 
-# usage
-
-
-To use this script a
-[bindingmode](https://i3wm.org/docs/userguide.html#binding_modes)
-named `sizemode` needs to be set in your i3 config
-file. Below is how I have set up this mode:
-
-`~/.config/i3/config`  
-
-``` text
-
-...
-
-# these keybindings are outside the mode definition
-
-# group A, enter size mode with direction:
-bindsym Mod4+Control+Left    exec --no-startup-id i3Kornhe size left
-bindsym Mod4+Control+Down    exec --no-startup-id i3Kornhe size down
-bindsym Mod4+Control+Up      exec --no-startup-id i3Kornhe size up
-bindsym Mod4+Control+Right   exec --no-startup-id i3Kornhe size right
-
-# group B, enter move mode with direction:
-# by using speed 0 (-p 0), this will only enter the mode without
-# moving the window.
-bindsym Mod4+Left      exec --no-startup-id i3Kornhe move -p 0 left
-bindsym Mod4+Down      exec --no-startup-id i3Kornhe move -p 0 down
-bindsym Mod4+Up        exec --no-startup-id i3Kornhe move -p 0 up
-bindsym Mod4+Right     exec --no-startup-id i3Kornhe move -p 0 right
-
-...
-
-mode "sizemode" {
-  # group 1 only send direction speed 30:
-  bindsym Left          exec --no-startup-id i3Kornhe -p 30 left
-  bindsym Down          exec --no-startup-id i3Kornhe -p 30 down
-  bindsym Up            exec --no-startup-id i3Kornhe -p 30 up
-  bindsym Right         exec --no-startup-id i3Kornhe -p 30 right
-  
-  # group 2 only send direction speed 5:
-  bindsym Shift+Left    exec --no-startup-id i3Kornhe -p 5 left
-  bindsym Shift+Down    exec --no-startup-id i3Kornhe -p 5 down
-  bindsym Shift+Up      exec --no-startup-id i3Kornhe -p 5 up
-  bindsym Shift+Right   exec --no-startup-id i3Kornhe -p 5 right
-
-  # group 3 change size direction:
-  bindsym Mod4+Left     exec --no-startup-id i3Kornhe size left
-  bindsym Mod4+Down     exec --no-startup-id i3Kornhe size down
-  bindsym Mod4+Up       exec --no-startup-id i3Kornhe size up
-  bindsym Mod4+Right    exec --no-startup-id i3Kornhe size right
-
-  # group 4 enter move mode:
-  bindsym m exec --no-startup-id i3Kornhe move -p 0 left
-
-  # group 5 move to absolute position 1-9:
-  bindsym 1 exec --no-startup-id i3Kornhe 1
-  bindsym 2 exec --no-startup-id i3Kornhe 2
-  bindsym 3 exec --no-startup-id i3Kornhe 3
-  bindsym 4 exec --no-startup-id i3Kornhe 4
-  bindsym 5 exec --no-startup-id i3Kornhe 5
-  bindsym 6 exec --no-startup-id i3Kornhe 6
-  bindsym 7 exec --no-startup-id i3Kornhe 7
-  bindsym 8 exec --no-startup-id i3Kornhe 8
-  bindsym 9 exec --no-startup-id i3Kornhe 9
-
-  # group 6 exit the mode
-  bindsym Escape exec --no-startup-id i3Kornhe x
-}
-```
-
-
-
-As you can see there are a lot of keybinding
-definitions, but keep in mind, without `i3Kornhe`
-you would need, one mode for every direction and
-action (at least 8). And one reason i made this
-script was unclutter and shrink my own config
-file.  
-
-A tip is also to use variables in the i3config:  
-``` text
-set $super bindsym Mod4
-set $i3Kornhe exec --no-startup-id i3Kornhe
-```
-
-
-
-``` text
-before:  
-bindsym Mod4+Right exec --no-startup-id i3Kornhe move -p 0 right
-
-after:  
-$super+Right $i3Kornhe m -p 0 r
-```
-
-
-
-*Notice that the first character of the
-mode/direction is enough. This shorter way will be
-used when the commands are referenced in the rest
-of this documentation.*  
-
-Let us go through the processes that will happen
-when the different actions are executed.  
-
-*group B:*  
-`$super+Left $i3Kornhe m -p 0 l`  
-
-This will make i3Kornhe to enter **move mode**.
-(*it will actually activate the i3 mode sizemode,
-move is a pseudo mode that only i3Korhne knows*)
-First thing i3Kornhe does is to store the current
-title_format of the window (by using `i3var set`).  
-
-It will then set the `title_format` to: `MOVE
-w:WIDTH h:HEIGHT x:X y:Y`  
-
-Populated with the actual dimensions and position
-of the window. The first word, "MOVE", in the
-title means that we don't need to specify the mode
-(move|size|m|s)  
-
-So if a keybinding from **group 1** or **group
-2** is executed it will move the window in the
-specified direction with the specified speed
-(speed defaults to 10 if not set).  
-
-If we would execute a keybinding from **group
-3**, where the mode is specified (size), this
-would change the title to:  
-
-`SIZE:CORNER w:WIDTH h:HEIGHT x:X y:Y`  
-
-CORNER is which corner of the window that will
-get moved. The CORNER is set with a direction:  
-
-
-| direction | corner
-|:----------|:------
-| Left      | topleft
-| Down      | bottomleft
-| Up        | topright
-| Right     | bottomright
-
-
-This might look strange at first, but if you look
-at the keys HJKL, you will see that there is some
-logic to it.
-
-If we now execute a keybinding from ***group 1***
-or ***group 2*** (without a mode definition), the
-named corner will *get moved*. To change corner
-execute a keybinding from **group 3**. To switch
-back to MOVE mode, we only need a single
-keybinding (**group 4**):  
-`bindsym m $i3Kornhe m -p 0 l`
-
-
-The direction and speed is needed but will not
-have any visual effect. To exit back to default
-mode execute `i3Kornhe` with `x` as the only
-argument, (**group 6**), this will exit the mode
-and reset the title_format to what it was
-initially.  
-
-You can also execute `i3Kornhe` with a number in
-the range 1-9 as a single argument. This will move
-the currently active window (if it is floating) to
-the position corresponding to the number:  
-
-``` text
-123
-456
-789
-```
-
-
-
-One important note is that if the active window
-is tiled, `i3Kornhe` will move it normally or
-resize it according to this table:  
-
-
-| direction | resize
-|:----------|:-------------
-| Left      | shrink width
-| Down      | shrink height
-| Up        | grow height
-| Right     | grow width
-
-
 
 DEPENDENCIES
 ------------
@@ -708,13 +545,13 @@ SYNOPSIS
 --------
 
 ```text
-i3list [--json FILE]
-i3list --instance|-i TARGET [--json FILE]
-i3list --class|-c    TARGET [--json FILE]
-i3list --conid|-n    TARGET [--json FILE]
-i3list --winid|-d    TARGET [--json FILE]
-i3list --mark|-m     TARGET [--json FILE]
-i3list --title|-t    TARGET [--json FILE]
+i3list [--json JSON]
+i3list --instance|-i TARGET [--json JSON]
+i3list --class|-c    TARGET [--json JSON]
+i3list --conid|-n    TARGET [--json JSON]
+i3list --winid|-d    TARGET [--json JSON]
+i3list --mark|-m     TARGET [--json JSON]
+i3list --title|-t    TARGET [--json JSON]
 i3list --help|-h
 i3list --version|-v
 ```
@@ -740,7 +577,9 @@ OPTIONS
 -------
 
 
-`--json` FILE  
+`--json` JSON  
+use JSON instead of output from  `i3-msg -t
+get_tree`
 
 `--instance`|`-i` TARGET  
 Search for windows with a instance matching
@@ -1200,7 +1039,7 @@ options**.  It is also important that *COMMAND*
 **will spawn a window matching the criteria**, 
 otherwise the script will get stuck in a loop
 waiting for the window to appear. (*it will stop
-waiting for the window to appear after 10
+waiting for the window to appear after 60
 seconds*)
 
 
@@ -1339,12 +1178,12 @@ SYNOPSIS
 
 ```text
 i3viswiz [--gap|-g GAPSIZE] DIRECTION  [--json JSON]
-i3viswiz [--focus|-f] --title|-t       [TARGET] [--json JSON]
-i3viswiz [--focus|-f] --instance|-i    [TARGET] [--json JSON]
-i3viswiz [--focus|-f] --class|-c       [TARGET] [--json JSON]
-i3viswiz [--focus|-f] --titleformat|-o [TARGET] [--json JSON]
-i3viswiz [--focus|-f] --winid|-d       [TARGET] [--json JSON]
-i3viswiz [--focus|-f] --parent|-p      [TARGET] [--json JSON]
+i3viswiz --title|-t       [--gap|-g GAPSIZE] [DIRECTION|TARGET] [--focus|-f] [--json JSON]
+i3viswiz --instance|-i    [--gap|-g GAPSIZE] [DIRECTION|TARGET] [--focus|-f] [--json JSON]
+i3viswiz --class|-c       [--gap|-g GAPSIZE] [DIRECTION|TARGET] [--focus|-f] [--json JSON]
+i3viswiz --titleformat|-o [--gap|-g GAPSIZE] [DIRECTION|TARGET] [--focus|-f] [--json JSON]
+i3viswiz --winid|-d       [--gap|-g GAPSIZE] [DIRECTION|TARGET] [--focus|-f] [--json JSON]
+i3viswiz --parent|-p      [--gap|-g GAPSIZE] [DIRECTION|TARGET] [--focus|-f] [--json JSON]
 i3viswiz --help|-h
 i3viswiz --version|-v
 ```
@@ -1367,12 +1206,21 @@ OPTIONS
 -------
 
 
-`--gap`|`-g` DIRECTION  
+`--gap`|`-g` TARGET  
 Set GAPSIZE (defaults to 5). GAPSIZE is the
 distance in pixels from the current window where
 new focus will be searched.  
 
 `--json` JSON  
+use JSON instead of output from  `i3-msg -t
+get_tree`
+
+`--title`|`-t`  
+If **TARGET** matches the **TITLE** of a visible
+window, that windows  **CON_ID** will get printed
+to `stdout`. If no **TARGET** is specified, a list
+of all tiled windows will get printed with 
+**TITLE** as the last field of each row.
 
 `--focus`|`-f`  
 When used in conjunction with: `--titleformat`,
@@ -1380,14 +1228,7 @@ When used in conjunction with: `--titleformat`,
 `--parent`. The **CON_ID** of **TARGET** window
 will get focused if it is visible.
 
-`--title`|`-t` [TARGET]  
-If **TARGET** matches the **TITLE** of a visible
-window, that windows  **CON_ID** will get printed
-to `stdout`. If no **TARGET** is specified, a list
-of all tiled windows will get printed with 
-**TITLE** as the last field of each row.
-
-`--instance`|`-i` [TARGET]  
+`--instance`|`-i`  
 If **TARGET** matches the **INSTANCE** of a
 visible window, that windows  **CON_ID** will get
 printed to `stdout`. If no **TARGET** is
@@ -1395,14 +1236,14 @@ specified, a list of all tiled windows will get
 printed with  **INSTANCE** as the last field of
 each row.
 
-`--class`|`-c` [TARGET]  
+`--class`|`-c`  
 If **TARGET** matches the **CLASS** of a visible
 window, that windows  **CON_ID** will get printed
 to `stdout`. If no **TARGET** is specified, a list
 of all tiled windows will get printed with 
 **CLASS** as the last field of each row.
 
-`--titleformat`|`-o` [TARGET]  
+`--titleformat`|`-o`  
 If **TARGET** matches the **TITLE_FORMAT** of a
 visible window, that windows  **CON_ID** will get
 printed to `stdout`. If no **TARGET** is
@@ -1410,7 +1251,7 @@ specified, a list of all tiled windows will get
 printed with  **TITLE_FORMAT** as the last field
 of each row.
 
-`--winid`|`-d` [TARGET]  
+`--winid`|`-d`  
 If **TARGET** matches the **WIN_ID** of a visible
 window, that windows  **CON_ID** will get printed
 to `stdout`. If no **TARGET** is specified, a list
@@ -1418,7 +1259,7 @@ of all tiled windows will get printed with
 **WIN_ID** as the last field of each row.
 
 
-`--parent`|`-p` [TARGET]  
+`--parent`|`-p`  
 If **TARGET** matches the **PARENT** of a visible
 window, that windows  **CON_ID** will get printed
 to `stdout`. If no **TARGET** is specified, a list
@@ -1442,16 +1283,15 @@ Normal binding:
 bindsym Mod4+Shift+Left   focus left
 
 Wizzy binding:
-bindsym Mod4+Left   exec --no-startup-id i3viswiz l 
+bindsym Mod4+Left   exec --no-startup-id i3viswiz left
 ```
 
 
 
 example output:  
 ``` text
-$ i3viswiz -o -g 20 down
-target_con_id: 94851559487504
-tx: 582 ty: 470 wall: none
+$ i3viswiz --class --gap 20 down
+trgcon=94125805431344 trgx=1329 trgy=828 wall=none trgpar=C sx=0 sy=0 sw=1920 sh=1080 groupsize=3 grouppos=3 firstingroup=94125805065424 lastingroup=94125805553936 grouplayout="tabbed" groupid=94125805519264 gap=5
 * 94851560291216 x: 0     y: 0     w: 1165  h: 450   | URxvt
 - 94851559487504 x: 0     y: 451   w: 1165  h: 448   | sublime
 - 94851560318768 x: 1166  y: 0     w: 433   h: 899   | bin
@@ -1459,6 +1299,14 @@ tx: 582 ty: 470 wall: none
 
 
 
+If `--class , --instance, --title, --titleformat,
+--winid or --parent` is used together with a
+DIRECTION. i3viswiz will print this output, with
+the type in the last column of the table (class in
+the example above). The first line contains a lot
+of useful pseudo variables that is used by other
+scripts in **i3ass**  `eval "$(i3viswiz -p d)" ;
+echo "$groupsize"`
 
 DEPENDENCIES
 ------------
