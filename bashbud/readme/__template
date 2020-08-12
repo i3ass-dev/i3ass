@@ -1,5 +1,5 @@
 ---
-target:   README.md
+target:   nextREADME.md
 markdown: true
 wrap:     60
 ...
