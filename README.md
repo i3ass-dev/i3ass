@@ -199,3 +199,11 @@ The other branch of the repository, [release](https://github.com/i3ass-dev/i3ass
 Pull requests should be done towards a repositories **next** branch.
 If they are accepted they get merged into the repositories **master** branch,
 the version of the command will get incremented and the **master** branch will get tagged with the same version. Do not, make pull requests to repositories named **i3ass** (this one and the one at: [budlabs/i3ass](https://github.com/budlabs/i3ass)).
+
+### issues
+
+I would like more or less all issues to be collected and reported to the issuetracker at: [https://github.com/budlabs/i3ass/issues](https://github.com/budlabs/i3ass/issues), but we can report issues that is only related to the development process here ( [https://github.com/i3ass-dev/i3ass/issues](https://github.com/budlabs/i3ass/issues) ). The other repositories in this organization have *issues* disabled.  
+
+That both makes it easier for any user to file an issue, and it should also make it much easier for developers to browse the issues. And GitHub® makes it easy to reference f.i. pullrequests done to, lets say, i3ass-dev/i3get, in an issue created at budlabs/i3ass.  
+
+I am also open for the idea of letting the issue tracker in this repository, (i3ass-dev/i3ass), be sort of a place for just discussing new features and stuff.
