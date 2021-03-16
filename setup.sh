@@ -2,7 +2,7 @@
 
 ERX() { >&2 echo  "[ERROR] $*" ; exit 1 ;}
 
-command -v bashbudr >/dev/null \
+command -v bashbud >/dev/null \
   || ERX "could not find bashbud,"        \
      "installation instructions at:"$'\n' \
      "https://github.com/budlabs/bashbud"
