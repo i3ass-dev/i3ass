@@ -1,5 +1,7 @@
 ## Welcome to i3ass-dev
 
+![i3ass logo](assets/i3ass-first-logo2021-05-26-300x200.png)
+
 There are two main branches of this repository,
 with two different purposes.
 This branch, **dev**, 
