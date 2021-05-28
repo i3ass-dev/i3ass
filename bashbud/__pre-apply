@@ -112,7 +112,3 @@ for a in "$projectdir/ass"/*; do
     "${a##*/}" \
     "$(bashbud --get description "$a")"
 done >> "$tablefile"
-
-
-
-
