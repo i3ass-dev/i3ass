@@ -67,7 +67,7 @@ EXAMPLES
 
 ## updates
 
-%%cat -t -n 3 releasenotes/*%%
+%%cat -t -n 1 releasenotes/*%%
 %%fi%%
 %%if readme_issues%%
 
