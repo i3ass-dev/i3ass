@@ -1,6 +1,6 @@
 # readme_banner
 
-![logo](assets/i3ass-first-logo2021-05-26-600x400.png)  
+![logo](assets/i3ass-first-logo2021-05-26-300x200.png)  
 This is a collection of scripts I have made to
 assist the usage of the windowmanager known as [i3wm]. 
 
