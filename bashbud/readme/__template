@@ -63,11 +63,11 @@ EXAMPLES
 
 %%examples%%
 %%fi%%
-%%if -d releasenotes%%
+%%if -f releasenotes/0next.md%%
 
 ## updates
 
-%%cat -t -n 1 releasenotes/*%%
+%%cat releasenotes/0next.md%%
 %%fi%%
 %%if readme_issues%%
 
