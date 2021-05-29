@@ -51,5 +51,20 @@ All the scripts that will be installed are located in the `src` directory of thi
 
 # readme_issues
 
-`i3-msg restart` breaks [i3fyra], try to use `i3-msg reload` instead (*it's faster and usually works just as good as restart*).
+**THERE IS NO SUPPORT FOR i3-gaps**  
+some scripts might still work with i3-gaps,
+but consider that *Happy little accidents™*  
+
+The latest version of i3 (**4.19**) introduced a new behaviour
+that triggers `for_window` directives when a window is sent to the scratchpad.
+This is very annoying if one would use something like:  
+`for_window [instance=Install_gentoo] exec i3fyra --move A`  
+I recommend anyone using `for_window` to stick with version **4.18.3**,
+till this is resolved..  
+
+`i3-msg restart` breaks [i3fyra],
+try to use `i3-msg reload` instead
+(*it's faster and usually works just as good as restart*).
+
+
 
