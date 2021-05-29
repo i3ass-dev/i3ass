@@ -1,11 +1,8 @@
 # readme_banner
 
+![logo](assets/i3ass-first-logo2021-05-26-600x400.png)  
 This is a collection of scripts I have made to
 assist the usage of the windowmanager known as [i3wm]. 
-
-[![Sparkline](https://stars.medv.io/budlabs/i3ass.svg)](https://stars.medv.io/budlabs/i3ass)
-
-
 
 # examples
 

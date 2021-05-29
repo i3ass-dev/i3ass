@@ -35,16 +35,6 @@ smallassupdate() {
 
 projectdir="$1"
 
-# copy all ass man pages
-# rename them to the name, add index
-i=10
-rm -rf "$projectdir/wiki/doc/"*
-for f in "$projectdir/ass"/*/manpage.md; do
-  thisass="${f%/*}"
-  thisass="${thisass##*/}"
-  echo "# $(cat "$f")" > \
-    "$projectdir/wiki/doc/$((i++))AS_${thisass}.md"
-done
 
 # clone next branch if dir doesn't exist
 [[ -d "${projectdir}/next" ]] || (
@@ -58,11 +48,23 @@ done
 mkdir -p "$projectdir/next/src"
 mkdir -p "$projectdir/next/man"
 
-for f in "$projectdir/ass"/*/program.sh; do
+# copy all ass man pages
+# rename them to the name, add index
+rm -rf "$projectdir/wiki/doc/"*
+rm -rf "$projectdir/wiki/_Sidebar.md"
+
+wiki_url="https://github.com/budlabs/i3ass/wiki"
+
+for f in "$projectdir/ass"/*/manpage.md; do
   thisass="${f%/*}"
   thisass="${thisass##*/}"
+  echo "# $(cat "$f")" > \
+    "$projectdir/wiki/doc/${thisass}.md"
 
-  smallassupdate "$f" "$projectdir/next/src/$thisass"
+  echo "- [$thisass]($wiki_url/$thisass.md)" \
+    >> "$projectdir/wiki/_Sidebar.md"
+
+  # smallassupdate "$f" "$projectdir/next/src/$thisass"
 done
 
 # update dependency list
