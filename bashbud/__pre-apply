@@ -19,10 +19,10 @@ smallassupdate() {
     >&2 echo "update ${current##*/}"
 
     mkdir -p "$theirbbdir"
-    cp -f "$datescript" "$versionscript" -t "$theirbbdir"
+    cp -f "$datescript" -t "$theirbbdir"
     bashbud --bump "$latestdir"
     newversion=$(bashbud --get version "$latestdir")
-    rm "$theirbbdir"/date-update "$theirbbdir"/version-increment
+    rm "$theirbbdir"/date-update 
     git -C "$latestdir" add .
     git -C "$latestdir" commit -m 'updated version'
     git -C "$latestdir" tag "$newversion"
